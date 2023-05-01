@@ -8,14 +8,16 @@ on:
   schedule:
     - cron: '*/30 * * * *'
 
+
+
 jobs:
-
-  check-in:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30         
     steps:
-    - uses: actions/checkout@v3
-
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
+        fetch-depth: 0 # otherwise, there would be errors pushing refs to the destination repository.
     - name: Install Python
       run: |
         sudo apt update && \
@@ -25,9 +27,14 @@ jobs:
     - name: test
       run: |
         python3 main.py 
-        
-    - uses: mikeal/publish-to-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN}}
-        BRANCH_NAME: '' #optional defaults to master
 
+    - name: Commit files
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -a -m "Add changes"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GH_TOKEN }}
+        branch: ${{ github.ref }}
