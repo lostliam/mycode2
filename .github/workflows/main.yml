@@ -25,7 +25,10 @@ jobs:
 
         
     - name: test
+      env:
+        WEBSITE: ${{secrets.WEBSITE}}
       run: |
+        pip3 install requests
         python3 main.py 
 
     - name: Commit files
