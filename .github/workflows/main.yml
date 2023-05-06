@@ -21,14 +21,12 @@ jobs:
     - name: Install Python
       run: |
         sudo apt update && \
-        sudo apt install python3
-
-        
+        sudo apt install python3 && \
+        pip3 install requests==2.24.0       
     - name: test
       env:
         WEBSITE: ${{secrets.WEBSITE}}
       run: |
-        pip3 install requests
         python3 main.py 
 
     - name: Commit files
