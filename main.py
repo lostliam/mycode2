@@ -1,5 +1,6 @@
 import requests,re,os
 from random import randint
+from time import sleep
 WEBSITE=os.getenv('WEBSITE')
 headers = {
     'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -22,7 +23,7 @@ data = '------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-da
 response = requests.post(WEBSITE+'/auth/register',  headers=headers, data=data)
 # print(response.text.encode('utf-8').decode('unicode_escape'))
 # print(mail)
-
+sleep(2)
 
 headers = {
     'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -47,7 +48,7 @@ data = {
 response = requests.post(WEBSITE+'/auth/login',headers=headers, data=data)
 # print(response.text.encode('utf-8').decode('unicode_escape'))
 cookies=response.cookies
-
+sleep(2)
 
 data = {
     'coupon': '',
@@ -55,14 +56,19 @@ data = {
     'autorenew': '0',
     'disableothers': '1',
 }
+sleep(2)
 
 response = requests.post(WEBSITE+'/user/buy', cookies=cookies, headers=headers, data=data)
 # print(response.text.encode('utf-8').decode('unicode_escape'))
+sleep(2)
+
 response = requests.post(WEBSITE+'/user/checkin', cookies=cookies, headers=headers)
 # print(response.text.encode('utf-8').decode('unicode_escape'))
+sleep(2)
 
 response = requests.get(WEBSITE+'/user', cookies=cookies, headers=headers)
 url=re.search(r'https://(.*?)clash=1&extend=1',response.text).group()
+sleep(2)
 
 response = requests.get(url, headers=headers)
 # print(response.text)
