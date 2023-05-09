@@ -27,7 +27,7 @@ jobs:
       env:
         WEBSITE: ${{secrets.WEBSITE}}
       run: |
-        python3 ip.py 
+        python3 main.py 
 
     - name: Commit files
       run: |
