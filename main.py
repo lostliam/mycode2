@@ -47,7 +47,7 @@ data2 = {
     'disableothers': '1',
 }
 # proxies={'http': '127.0.0.1:7890', 'https': '127.0.0.1:7890'}
-
+proxies=''
 def post(url,headers,cookies='',data='',proxies=''):
     attempts = 0
     max_attempts = 10
@@ -59,7 +59,7 @@ def post(url,headers,cookies='',data='',proxies=''):
                 response = requests.post(url,  headers=headers, data=data,proxies=proxies)
                 global CK
                 CK= response.cookies
-            print(response.text.encode('utf-8').decode('unicode_escape'))
+            #print(response.text.encode('utf-8').decode('unicode_escape'))
             break
         except Exception as e:
             attempts += 1
@@ -76,7 +76,7 @@ def get(url,headers,cookies='',proxies=''):
         try:
             response =requests.get(url,cookies=cookies,headers=headers,proxies=proxies)
             url=re.search(r'https://(.*?)clash=1&extend=1',response.text).group()
-            print(response.text.encode('utf-8').decode('unicode_escape'))
+            #print(response.text.encode('utf-8').decode('unicode_escape'))
             response = requests.get(url, headers=headers,proxies=proxies)
             with open('example.txt', 'w') as f:
                 f.write(response.text)
