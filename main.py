@@ -41,12 +41,12 @@ def post(url,headers,cookies='',data=''):
     while True:
         try:
             if cookies:
-                response =requests.post(url,cookies=cookies,headers=headers,data=data,verify=False)
+                response =requests.post(url,cookies=cookies,headers=headers,data=data )
             else:
-                response = requests.post(url,  headers=headers, data=data,verify=False)
+                response = requests.post(url,  headers=headers, data=data )
                 global CK
                 CK= response.cookies
-            print(response.text.encode('utf-8').decode('unicode_escape'))
+            #print(response.text.encode('utf-8').decode('unicode_escape'))
         except Exception as e:
             attempts += 1
             if attempts >= max_attempts:
@@ -60,9 +60,9 @@ def get(url,headers,cookies=''):
     max_attempts = 10
     while True:
         try:
-            response =requests.get(url,cookies=cookies,headers=headers,verify=False)
+            response =requests.get(url,cookies=cookies,headers=headers )
             url=re.search(r'https://(.*?)clash=1&extend=1',response.text).group()
-            print(response.text.encode('utf-8').decode('unicode_escape'))
+            #print(response.text.encode('utf-8').decode('unicode_escape'))
             response = requests.get(url, headers=headers)
             with open('example.txt', 'w') as f:
                 f.write(response.text)
