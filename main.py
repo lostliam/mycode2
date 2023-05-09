@@ -1,8 +1,8 @@
 import requests,re,os
 from random import randint
 from time import sleep
-WEBSITE=os.getenv('WEBSITE')
-
+# WEBSITE=os.getenv('WEBSITE')
+WEBSITE='https://gogoo.cyou'
 mail=str(randint(100000000,9999999999))+'@qq.com'
 
 data = '------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-data; name="passwd"\r\n\r\n{}\r\n------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-data; name="repasswd"\r\n\r\n{}\r\n------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-data; name="geetest_code"\r\n\r\n111\r\n------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-data; name="code"\r\n\r\n\r\n------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-data; name="geetest_challenge"\r\n\r\n6d80c7a33d63e496e46fc5b2f4ae7dbeac\r\n------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-data; name="geetest_validate"\r\n\r\naa38062903058b8013d7c27020a1107e\r\n------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-data; name="geetest_seccode"\r\n\r\naa38062903058b8013d7c27020a1107e%7Cjordan\r\n------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-data; name="email"\r\n\r\n{}\r\n------WebKitFormBoundaryqhEFAFCsKLBfEqRY\r\nContent-Disposition: form-data; name="name"\r\n\r\n{}\r\n------WebKitFormBoundaryqhEFAFCsKLBfEqRY--\r\n'.format(mail,mail,mail,mail)
@@ -33,17 +33,17 @@ data1 = {
     'autorenew': '0',
     'disableothers': '1',
 }
+proxies={'http': '1.117.79.73:3128', 'https': '1.117.79.73:3128'}
 
-
-def post(url,headers,cookies='',data=''):
+def post(url,headers,cookies='',data='',proxies=''):
     attempts = 0
     max_attempts = 10
     while True:
         try:
             if cookies:
-                response =requests.post(url,cookies=cookies,headers=headers,data=data )
+                response =requests.post(url,cookies=cookies,headers=headers,data=data,proxies=proxies)
             else:
-                response = requests.post(url,  headers=headers, data=data )
+                response = requests.post(url,  headers=headers, data=data,proxies=proxies)
                 global CK
                 CK= response.cookies
             #print(response.text.encode('utf-8').decode('unicode_escape'))
@@ -55,15 +55,15 @@ def post(url,headers,cookies='',data=''):
                 sleep(2)    
 
 
-def get(url,headers,cookies=''):
+def get(url,headers,cookies='',proxies=''):
     attempts = 0
     max_attempts = 10
     while True:
         try:
-            response =requests.get(url,cookies=cookies,headers=headers )
+            response =requests.get(url,cookies=cookies,headers=headers,proxies=proxies)
             url=re.search(r'https://(.*?)clash=1&extend=1',response.text).group()
             #print(response.text.encode('utf-8').decode('unicode_escape'))
-            response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers,proxies=proxies)
             with open('example.txt', 'w') as f:
                 f.write(response.text)
         except Exception as e:
@@ -75,9 +75,9 @@ def get(url,headers,cookies=''):
 
 
 
-post(WEBSITE+'/auth/register',  headers=headers, data=data)
-post(WEBSITE+'/auth/login',  headers=headers, data=data)
-post(WEBSITE+'/user/buy', cookies=CK, headers=headers, data=data1)
-post(WEBSITE+'/user/checkin', cookies=CK, headers=headers)
-get(WEBSITE+'/user', cookies=CK, headers=headers)
+post(WEBSITE+'/auth/register',  headers=headers, data=data,proxies=proxies)
+post(WEBSITE+'/auth/login',  headers=headers, data=data,proxies=proxies)
+post(WEBSITE+'/user/buy', cookies=CK, headers=headers, data=data1,proxies=proxies)
+post(WEBSITE+'/user/checkin', cookies=CK, headers=headers,proxies=proxies)
+get(WEBSITE+'/user', cookies=CK, headers=headers,proxies=proxies)
 
