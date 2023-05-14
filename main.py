@@ -75,7 +75,7 @@ def get(url,headers,cookies='',proxies=''):
     while True:
         try:
             response =requests.get(url,cookies=cookies,headers=headers,proxies=proxies)
-            url=re.search(r'https://(.*?)clash=1&extend=1',response.text).group()
+            url=re.search(r'https://(.*?)clash=1',response.text).group()
             #print(response.text.encode('utf-8').decode('unicode_escape'))
             response = requests.get(url, headers=headers,proxies=proxies)
             with open('example.txt', 'w') as f:
