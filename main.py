@@ -21,9 +21,8 @@ headers = {
 }
 
 
-with open('example.txt', 'r',encoding='gbk') as f:
-    str=str(f.readline()[1:])
-    acc=re.search(r'(.*?)@qq.com',str).group()
+with open('test.txt', 'r',encoding='gbk') as f:
+    acc=str(f.readline())
 
 datac = {
     'email': acc,
@@ -79,8 +78,9 @@ def get(url,headers,cookies='',proxies=''):
             # print(response.text.encode('utf-8').decode('unicode_escape'))
             response = requests.get(url, headers=headers,proxies=proxies)
             with open('example.txt', 'w') as f:
-                f.write('#'+mail)
                 f.write(response.text)
+            with open('test.txt', 'w') as f:
+                f.write(mail)
             break
         except Exception as e:
             attempts += 1
