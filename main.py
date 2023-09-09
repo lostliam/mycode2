@@ -1,12 +1,10 @@
 import requests,re,os
 from random import randint
 from time import sleep
-import warnings 
+import warnings,random,string
 warnings.filterwarnings("ignore")
 
 WEBSITE=os.getenv('WEBSITE')
-mail=str(randint(100000000,9999999999))+'@qq.com'
-
 
 headers = {
     'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -22,32 +20,34 @@ headers = {
     'x-requested-with': 'XMLHttpRequest',
 }
 
-data = {
-    'email': mail,
-    'name': mail,
-    'passwd': mail,
-    'repasswd': mail,
-    'geetest_code': '111',
-    'code': '',
-    'geetest_challenge': '99de83c52927f403d186ccb7e9140964gi',
-    'geetest_validate': 'f085c7b27d9111fac536fb7e1dba5396',
-    'geetest_seccode': 'f085c7b27d9111fac536fb7e1dba5396|jordan',
-}
 
-data1 = {
-    'email': mail,
-    'passwd': mail,
+with open('example.jpg', 'r') as f:
+    acc=re.search(r'(.*?)@qq.com',f.readline()[1:]).group()
+
+datac = {
+    'email': acc,
+    'passwd': acc,
     'code': '',
 }
 
-data2 = {
-    'coupon': '',
-    'shop': '1',
-    'autorenew': '0',
-    'disableothers': '1',
-}
 # proxies={'http': '127.0.0.1:7890', 'https': '127.0.0.1:7890'}
-proxies=''
+# proxies=''
+
+def generate_random_id():
+    digits = ''.join(random.choices(string.digits, k=9))
+    num_letters = random.randint(2, 5)
+    letters = ''.join(random.choices(string.ascii_letters, k=num_letters))
+
+    # Randomly choose the position of letters
+    if random.choice([True, False]):
+        random_id = letters + digits
+    else:
+        random_id = digits + letters
+
+    return random_id+'@qq.com'
+
+mail=generate_random_id()
+
 def post(url,headers,cookies='',data='',proxies=''):
     attempts = 0
     max_attempts = 10
@@ -68,7 +68,6 @@ def post(url,headers,cookies='',data='',proxies=''):
             else:
                 sleep(2)    
 
-
 def get(url,headers,cookies='',proxies=''):
     attempts = 0
     max_attempts = 10
@@ -76,9 +75,10 @@ def get(url,headers,cookies='',proxies=''):
         try:
             response =requests.get(url,cookies=cookies,headers=headers,proxies=proxies)
             url=re.search(r'https://(.*?)clash=1',response.text).group()
-            #print(response.text.encode('utf-8').decode('unicode_escape'))
+            # print(response.text.encode('utf-8').decode('unicode_escape'))
             response = requests.get(url, headers=headers,proxies=proxies)
-            with open('example.txt', 'w') as f:
+            with open('example.jpg', 'w') as f:
+                f.write('#'+mail)
                 f.write(response.text)
             break
         except Exception as e:
@@ -90,9 +90,59 @@ def get(url,headers,cookies='',proxies=''):
 
 
 
-post(WEBSITE+'/auth/register',  headers=headers, data=data,proxies=proxies)
-post(WEBSITE+'/auth/login',  headers=headers, data=data1,proxies=proxies)
-post(WEBSITE+'/user/buy', cookies=CK, headers=headers, data=data2,proxies=proxies)
-post(WEBSITE+'/user/checkin', cookies=CK, headers=headers,proxies=proxies)
-get(WEBSITE+'/user', cookies=CK, headers=headers,proxies=proxies)
+def register():
+    data = {
+        'email': mail,
+        'name': mail,
+        'passwd': mail,
+        'repasswd': mail,
+        'geetest_code': '111',
+        'code': '',
+        'geetest_challenge': '99de83c52927f403d186ccb7e9140964gi',
+        'geetest_validate': 'f085c7b27d9111fac536fb7e1dba5396',
+        'geetest_seccode': 'f085c7b27d9111fac536fb7e1dba5396|jordan',
+    }
+    data1 = {
+        'email': mail,
+        'passwd': mail,
+        'code': '',
+    }
+    data2 = {
+        'coupon': '',
+        'shop': '1',
+        'autorenew': '0',
+        'disableothers': '1',
+    }
+    post(WEBSITE+'/auth/register',  headers=headers, data=data,proxies=proxies)
+    post(WEBSITE+'/auth/login',  headers=headers, data=data1,proxies=proxies)
+    post(WEBSITE+'/user/buy', cookies=CK, headers=headers, data=data2,proxies=proxies)
+    post(WEBSITE+'/user/checkin', cookies=CK, headers=headers,proxies=proxies)
+    get(WEBSITE+'/user', cookies=CK, headers=headers,proxies=proxies)
 
+def getc(url,headers,cookies='',proxies=''):
+    attempts = 0
+    max_attempts = 10
+    while True:
+        try:
+            response =requests.get(url,cookies=cookies,headers=headers,proxies=proxies)
+            pattern = r'<span class="counter">(.*?)</span>'
+            matches = re.findall(pattern, response.text)
+            if len(matches) >= 2:
+                print(matches[0])
+                print(matches[1])
+                if int(matches[0])>=1 and float(matches[1]) >=1.0:
+                    print('can use')
+                    break
+                else:
+                    register()
+                    break
+        except Exception as e:
+            attempts += 1
+            if attempts >= max_attempts:
+                raise e
+            else:
+                sleep(2)
+
+post(WEBSITE+'/auth/login',  headers=headers, data=datac,proxies=proxies)
+
+getc(WEBSITE+'/user', cookies=CK, headers=headers,proxies=proxies)
