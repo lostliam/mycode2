@@ -140,6 +140,8 @@ def getc(url,headers,cookies='',proxies=''):
         except Exception as e:
             attempts += 1
             if attempts >= max_attempts:
+                print('login error')
+                register()
                 raise e
             else:
                 sleep(2)
