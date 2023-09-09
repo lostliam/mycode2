@@ -21,7 +21,7 @@ headers = {
 }
 
 
-with open('example.jpg', 'r') as f:
+with open('example.txt', 'r') as f:
     acc=re.search(r'(.*?)@qq.com',f.readline()[1:]).group()
 
 datac = {
@@ -77,7 +77,7 @@ def get(url,headers,cookies='',proxies=''):
             url=re.search(r'https://(.*?)clash=1',response.text).group()
             # print(response.text.encode('utf-8').decode('unicode_escape'))
             response = requests.get(url, headers=headers,proxies=proxies)
-            with open('example.jpg', 'w') as f:
+            with open('example.txt', 'w') as f:
                 f.write('#'+mail)
                 f.write(response.text)
             break
