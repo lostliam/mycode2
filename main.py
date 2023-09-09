@@ -5,7 +5,6 @@ import warnings,random,string
 warnings.filterwarnings("ignore")
 
 WEBSITE=os.getenv('WEBSITE')
-WEBSITE='https://gogoo.club'
 
 headers = {
     'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -31,7 +30,7 @@ datac = {
     'code': '',
 }
 
-proxies={'http': '127.0.0.1:7890', 'https': '127.0.0.1:7890'}
+# proxies={'http': '127.0.0.1:7890', 'https': '127.0.0.1:7890'}
 proxies=''
 
 def generate_random_id():
