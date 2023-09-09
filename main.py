@@ -5,6 +5,7 @@ import warnings,random,string
 warnings.filterwarnings("ignore")
 
 WEBSITE=os.getenv('WEBSITE')
+WEBSITE='https://gogoo.club'
 
 headers = {
     'accept': 'application/json, text/javascript, */*; q=0.01',
@@ -30,7 +31,7 @@ datac = {
     'code': '',
 }
 
-# proxies={'http': '127.0.0.1:7890', 'https': '127.0.0.1:7890'}
+proxies={'http': '127.0.0.1:7890', 'https': '127.0.0.1:7890'}
 proxies=''
 
 def generate_random_id():
@@ -50,7 +51,7 @@ mail=generate_random_id()
 
 def post(url,headers,cookies='',data='',proxies=''):
     attempts = 0
-    max_attempts = 10
+    max_attempts = 3
     while True:
         try:
             if cookies:
@@ -63,17 +64,20 @@ def post(url,headers,cookies='',data='',proxies=''):
             break
         except Exception as e:
             attempts += 1
+            print('login error')
             if attempts >= max_attempts:
+                print('register')
+                register()
                 raise e
             else:
-                sleep(2)    
+                sleep(2)
 
 def get(url,headers,cookies='',proxies=''):
     attempts = 0
-    max_attempts = 10
+    max_attempts = 2
     while True:
         try:
-            response =requests.get(url,cookies=cookies,headers=headers,proxies=proxies)
+            response =requests.get(url,cookies=cookies,headers=headers,proxies=proxies,verify=False)
             url=re.search(r'https://(.*?)clash=1',response.text).group()
             # print(response.text.encode('utf-8').decode('unicode_escape'))
             response = requests.get(url, headers=headers,proxies=proxies)
@@ -122,7 +126,7 @@ def register():
 
 def getc(url,headers,cookies='',proxies=''):
     attempts = 0
-    max_attempts = 10
+    max_attempts = 3
     while True:
         try:
             response =requests.get(url,cookies=cookies,headers=headers,proxies=proxies)
@@ -139,8 +143,9 @@ def getc(url,headers,cookies='',proxies=''):
                     break
         except Exception as e:
             attempts += 1
+            print('login error')
             if attempts >= max_attempts:
-                print('login error')
+                print('register')
                 register()
                 raise e
             else:
