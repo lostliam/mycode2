@@ -21,7 +21,7 @@ headers = {
 }
 
 
-with open('example.txt', 'r') as f:
+with open('example.txt', 'r',encoding='gbk') as f:
     str=str(f.readline()[1:])
     acc=re.search(r'(.*?)@qq.com',str).group()
 
