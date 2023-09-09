@@ -22,7 +22,8 @@ headers = {
 
 
 with open('example.txt', 'r') as f:
-    acc=re.search(r'(.*?)@qq.com',f.readline()[1:]).group()
+    str=str(f.readline()[1:])
+    acc=re.search(r'(.*?)@qq.com',str).group()
 
 datac = {
     'email': acc,
